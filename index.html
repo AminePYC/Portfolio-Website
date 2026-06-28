@@ -85,7 +85,7 @@ body:has(button:hover) #cursor-ring{width:50px;height:50px}
   border: 1px solid var(--border);
   border-radius: 9999px;
   padding: 10px 14px;
-  box-shadow: 
+  box-shadow:
     0 8px 40px rgba(0, 0, 0, 0.6),
     0 0 0 1px rgba(227, 7, 73, 0.08);
   transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
@@ -315,13 +315,12 @@ body:has(button:hover) #cursor-ring{width:50px;height:50px}
 }
 
 @keyframes hero-spin { to { transform: rotate(360deg); } }
-
-/* ── PHOTO FRAME ── */
+/* ── PHOTO FRAME (CIRCLE) ── */
 .photo-frame {
   position: relative;
   z-index: 10;
-  width: 220px; height: 275px;
-  border-radius: 16px;
+  width: 260px; height: 260px;
+  border-radius: 50%;
   border: 1px solid rgba(227, 7, 73, .28);
   background: var(--panel);
   overflow: hidden;
@@ -337,21 +336,54 @@ body:has(button:hover) #cursor-ring{width:50px;height:50px}
   display: block;
 }
 
-/* Corner accents — all four */
+/* Corner accents — repositioned as arcs around the circle */
 .photo-frame::before, .photo-frame::after,
 .corner-tr, .corner-bl {
   content: '';
   position: absolute;
-  width: 20px; height: 20px;
+  width: 36px; height: 36px;
   z-index: 3;
   pointer-events: none;
+  border-radius: 50%;
 }
-.photo-frame::before { top:10px; left:10px;  border-top:2px solid #e30749; border-left:2px solid #e30749; border-radius:3px 0 0 0; }
-.photo-frame::after  { bottom:10px; right:10px; border-bottom:2px solid #e30749; border-right:2px solid #e30749; border-radius:0 0 3px 0; }
-.corner-tr { top:10px;  right:10px;  border-top:2px solid rgba(227,7,73,.4); border-right:2px solid rgba(227,7,73,.4); border-radius:0 3px 0 0; }
-.corner-bl { bottom:10px; left:10px; border-bottom:2px solid rgba(227,7,73,.4); border-left:2px solid rgba(227,7,73,.4); border-radius:0 0 0 3px; }
+.photo-frame::before {
+  top: -4px; left: 50%;
+  margin-left: -18px;
+  border-top: 2px solid #e30749;
+  border-right: 2px solid transparent;
+  border-left: 2px solid transparent;
+  border-bottom: 2px solid transparent;
+  transform: rotate(-20deg);
+}
+.photo-frame::after {
+  bottom: -4px; left: 50%;
+  margin-left: -18px;
+  border-bottom: 2px solid #e30749;
+  border-right: 2px solid transparent;
+  border-left: 2px solid transparent;
+  border-top: 2px solid transparent;
+  transform: rotate(20deg);
+}
+.corner-tr {
+  top: 50%; right: -4px;
+  margin-top: -18px;
+  border-right: 2px solid rgba(227,7,73,.4);
+  border-top: 2px solid transparent;
+  border-bottom: 2px solid transparent;
+  border-left: 2px solid transparent;
+  transform: rotate(20deg);
+}
+.corner-bl {
+  top: 50%; left: -4px;
+  margin-top: -18px;
+  border-left: 2px solid rgba(227,7,73,.4);
+  border-top: 2px solid transparent;
+  border-bottom: 2px solid transparent;
+  border-right: 2px solid transparent;
+  transform: rotate(-20deg);
+}
 
-/* Scanline sweep */
+/* Scanline sweep — unchanged, clips naturally to circle via overflow:hidden */
 .scanline {
   position: absolute;
   left: 0; right: 0;
@@ -367,7 +399,7 @@ body:has(button:hover) #cursor-ring{width:50px;height:50px}
   100% { top: 100%; opacity: 0; }
 }
 
-/* Glitch bar */
+/* Glitch bar — unchanged, clips naturally to circle via overflow:hidden */
 .glitch-bar {
   position: absolute;
   left: 0; right: 0; height: 3px;
@@ -876,7 +908,7 @@ footer{
 
     <!-- Photo frame -->
     <div class="photo-frame">
-      <img src="images/pic.jpg" alt="Amine Ben Amara">
+      <img src="images/pic_2.png" alt="Amine Ben Amara">
       <div class="placeholder-inner">
         <div class="placeholder-icon">
           <svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
