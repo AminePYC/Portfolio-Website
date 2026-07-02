@@ -9,9 +9,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet"/>
 <style>
-/* =====================================================
-   DESIGN TOKENS
-   ===================================================== */
+
 :root {
   --black:   #0E0007;
   --dark:    #130009;
@@ -29,9 +27,7 @@
   --sans:    'Space Grotesk', sans-serif;
 }
 
-/* =====================================================
-   BASE
-   ===================================================== */
+
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 html{scroll-behavior:smooth;font-size:16px}
 body{
@@ -45,9 +41,7 @@ body{
 a{color:inherit;text-decoration:none}
 img{display:block;max-width:100%}
 
-/* =====================================================
-   CURSOR
-   ===================================================== */
+
 #cursor{
   position:fixed;width:9px;height:9px;
   background:var(--red);border-radius:50%;
@@ -68,9 +62,7 @@ body:has(button:hover) #cursor{width:5px;height:5px}
 body:has(a:hover) #cursor-ring,
 body:has(button:hover) #cursor-ring{width:50px;height:50px}
 
-/* =====================================================
-   NAVBAR
-   ===================================================== */
+
 #nav {
   position: fixed;
   top: 24px;
@@ -118,9 +110,7 @@ body:has(button:hover) #cursor-ring{width:50px;height:50px}
 }
 .nav-item:hover svg{transform:scale(1.1)}
 
-/* =====================================================
-   HERO — split layout
-   ===================================================== */
+
 #hero{
   position:relative;
   min-height:100vh;
@@ -138,7 +128,6 @@ body:has(button:hover) #cursor-ring{width:50px;height:50px}
   pointer-events:none;z-index:1;
 }
 
-/* ---- LEFT: text ---- */
 .hero-left {
   position: relative;
   z-index: 2;
@@ -219,32 +208,25 @@ body:has(button:hover) #cursor-ring{width:50px;height:50px}
 .hstat-num span{color:var(--red)}
 .hstat-label{font-size:.72rem;color:var(--grey);letter-spacing:.04em}
 
-/* =====================================================
-   HERO RIGHT — big circle stage
-   ===================================================== */
+
 .hero-right {
   position: relative;
   display: flex;
   align-items: center;
   justify-content: center;
   z-index: 2;
-  /* Force a square so border-radius 50% gives a circle */
   aspect-ratio: 1 / 1;
   max-width: 520px;
   width: 100%;
   margin: 0 auto;
-  /* Circle clip */
   border-radius: 50%;
-  /* No solid border — the animation IS the boundary */
-  overflow: visible; /* allow orbit dots to peek out slightly */
-}
+  overflow: visible;
 
-/* The circle mask layer — sits above canvas, creates the fade-out edge */
+
 .hero-circle-mask {
   position: absolute;
   inset: 0;
   border-radius: 50%;
-  /* Radial gradient: transparent in centre, black (page bg) at edge */
   background: radial-gradient(
     circle at center,
     transparent 38%,
@@ -256,7 +238,7 @@ body:has(button:hover) #cursor-ring{width:50px;height:50px}
   z-index: 8;
 }
 
-/* Canvas — clipped to circle */
+
 .hero-canvas {
   position: absolute;
   inset: 0;
@@ -267,7 +249,7 @@ body:has(button:hover) #cursor-ring{width:50px;height:50px}
   z-index: 0;
 }
 
-/* SVG polygon cage */
+
 .hero-cage-svg {
   position: absolute;
   inset: 0;
@@ -315,7 +297,7 @@ body:has(button:hover) #cursor-ring{width:50px;height:50px}
 }
 
 @keyframes hero-spin { to { transform: rotate(360deg); } }
-/* ── PHOTO FRAME (CIRCLE) ── */
+
 .photo-frame {
   position: relative;
   z-index: 10;
@@ -336,7 +318,7 @@ body:has(button:hover) #cursor-ring{width:50px;height:50px}
   display: block;
 }
 
-/* Corner accents — repositioned as arcs around the circle */
+
 .photo-frame::before, .photo-frame::after,
 .corner-tr, .corner-bl {
   content: '';
@@ -383,7 +365,7 @@ body:has(button:hover) #cursor-ring{width:50px;height:50px}
   transform: rotate(-20deg);
 }
 
-/* Scanline sweep — unchanged, clips naturally to circle via overflow:hidden */
+
 .scanline {
   position: absolute;
   left: 0; right: 0;
@@ -399,7 +381,7 @@ body:has(button:hover) #cursor-ring{width:50px;height:50px}
   100% { top: 100%; opacity: 0; }
 }
 
-/* Glitch bar — unchanged, clips naturally to circle via overflow:hidden */
+
 .glitch-bar {
   position: absolute;
   left: 0; right: 0; height: 3px;
@@ -505,9 +487,7 @@ body:has(button:hover) #cursor-ring{width:50px;height:50px}
   100% { transform:translateY(20px); opacity:0; }
 }
 
-/* =====================================================
-   SECTION BASE
-   ===================================================== */
+
 .section{padding:110px 6vw;position:relative}
 .section-inner{max-width:1100px;margin:0 auto}
 
@@ -538,9 +518,7 @@ body:has(button:hover) #cursor-ring{width:50px;height:50px}
 .reveal-d3{transition-delay:.3s}
 .reveal-d4{transition-delay:.4s}
 
-/* =====================================================
-   ABOUT
-   ===================================================== */
+
 #about{background:var(--dark)}
 .about-layout{
   display:grid;grid-template-columns:1fr 1fr;
@@ -573,9 +551,7 @@ body:has(button:hover) #cursor-ring{width:50px;height:50px}
 .num-big{font-family:var(--mono);font-size:2.2rem;font-weight:700;color:var(--red);line-height:1;margin-bottom:.4rem}
 .num-label{font-size:.78rem;color:var(--grey);line-height:1.5}
 
-/* =====================================================
-   SKILLS
-   ===================================================== */
+
 #skills{background:var(--black)}
 .skills-groups{display:flex;flex-direction:column;gap:2.25rem;margin-top:3.5rem}
 .skill-row{display:flex;align-items:flex-start;gap:1.5rem}
@@ -597,9 +573,7 @@ body:has(button:hover) #cursor-ring{width:50px;height:50px}
 .chip.hot{border-color:rgba(227,7,73,.3);color:rgba(227,7,73,.9);background:rgba(227,7,73,.07)}
 .skills-divider{width:100%;height:1px;background:rgba(255,255,255,.04)}
 
-/* =====================================================
-   CERTS
-   ===================================================== */
+
 #certs{background:var(--dark)}
 .cert-list{position:relative;margin-top:3.5rem;padding-left:2rem}
 .cert-list::before{
@@ -646,9 +620,7 @@ body:has(button:hover) #cursor-ring{width:50px;height:50px}
 .badge-future{background:var(--panel2);color:var(--grey);border:1px solid rgba(255,255,255,.08)}
 .cert-when{font-family:var(--mono);font-size:.63rem;color:var(--grey);text-align:right}
 
-/* =====================================================
-   PROJECTS
-   ===================================================== */
+
 #projects{background:var(--black)}
 .project-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.2rem;margin-top:3.5rem}
 .proj-card{
@@ -690,9 +662,7 @@ body:has(button:hover) #cursor-ring{width:50px;height:50px}
 }
 .proj-link:hover{opacity:.7}
 
-/* =====================================================
-   WRITEUPS
-   ===================================================== */
+
 #writeups{background:var(--dark)}
 .writeup-list{
   display:flex;flex-direction:column;gap:1px;
@@ -724,9 +694,7 @@ body:has(button:hover) #cursor-ring{width:50px;height:50px}
 .wu-arrow{font-size:1.3rem;color:var(--grey);transition:color .2s,transform .2s;flex-shrink:0}
 .wu-card:hover .wu-arrow{color:var(--red);transform:translateX(4px)}
 
-/* =====================================================
-   FOOTER
-   ===================================================== */
+
 footer{
   background:var(--dark);
   border-top:1px solid var(--border);
@@ -776,9 +744,7 @@ footer{
 .footer-copy span{color:var(--red)}
 .footer-made{font-family:var(--mono);font-size:.62rem;color:rgba(255,255,255,.18);letter-spacing:.06em}
 
-/* =====================================================
-   ANIMATIONS
-   ===================================================== */
+
 @keyframes fadeInUp{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:none}}
 .hero-left .hero-tag{animation:fadeInUp .6s .2s both}
 .hero-left .hero-h1{animation:fadeInUp .7s .35s both}
@@ -787,9 +753,7 @@ footer{
 .hero-left .hero-stats{animation:fadeInUp .6s .85s both}
 .hero-right{animation:fadeInUp .8s .4s both}
 
-/* =====================================================
-   RESPONSIVE
-   ===================================================== */
+
 @media(max-width:960px){
   #hero{grid-template-columns:1fr;padding:100px 5vw 80px;gap:3rem}
   .hero-right{max-width:380px}
@@ -821,7 +785,7 @@ footer{
 <div id="cursor"></div>
 <div id="cursor-ring"></div>
 
-<!-- ===================================================== NAVBAR ===================================================== -->
+
 <nav id="nav">
   <a href="#about" class="nav-item" data-section="about">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
@@ -849,7 +813,7 @@ footer{
   </a>
 </nav>
 
-<!-- ===================================================== HERO ===================================================== -->
+
 <section id="hero">
 
   <!-- LEFT -->
@@ -887,26 +851,26 @@ footer{
     </div>
   </div>
 
-  <!-- RIGHT — circle stage -->
+
   <div class="hero-right">
 
-    <!-- Canvas: particles + triangles -->
+    <
     <canvas class="hero-canvas" id="heroCanvas"></canvas>
 
-    <!-- SVG polygon cage -->
+
     <svg class="hero-cage-svg" id="heroCageSvg" xmlns="http://www.w3.org/2000/svg"></svg>
 
-    <!-- Radial fade mask — makes edges dissolve into background -->
+
     <div class="hero-circle-mask"></div>
 
-    <!-- Orbit rings -->
+
     <div class="orbit-system">
       <div class="orbit-ring"><div class="orbit-dot"></div></div>
       <div class="orbit-ring"><div class="orbit-dot orbit-dot-sm" style="top:auto;bottom:-2px;left:50%;transform:translateX(-50%);"></div></div>
       <div class="orbit-ring"><div class="orbit-dot orbit-dot-sm" style="top:50%;left:auto;right:-2px;transform:translateY(-50%);"></div></div>
     </div>
 
-    <!-- Photo frame -->
+
     <div class="photo-frame">
       <img src="images/pic_2.png" alt="Amine Ben Amara">
       <div class="placeholder-inner">
@@ -920,11 +884,10 @@ footer{
       <div class="corner-bl"></div>
     </div>
 
-  </div><!-- /.hero-right -->
+  </div>
 
 </section>
 
-<!-- ===================================================== ABOUT ===================================================== -->
 <section id="about" class="section">
   <div class="section-inner">
     <div class="about-layout">
@@ -962,7 +925,7 @@ footer{
   </div>
 </section>
 
-<!-- ===================================================== SKILLS ===================================================== -->
+
 <section id="skills" class="section">
   <div class="section-inner">
     <div class="reveal">
@@ -1009,7 +972,7 @@ footer{
   </div>
 </section>
 
-<!-- ===================================================== CERTS ===================================================== -->
+
 <section id="certs" class="section">
   <div class="section-inner">
     <div class="reveal">
@@ -1052,7 +1015,7 @@ footer{
   </div>
 </section>
 
-<!-- ===================================================== PROJECTS ===================================================== -->
+
 <section id="projects" class="section">
   <div class="section-inner">
     <div class="reveal">
@@ -1095,7 +1058,7 @@ footer{
   </div>
 </section>
 
-<!-- ===================================================== WRITEUPS ===================================================== -->
+
 <section id="writeups" class="section">
   <div class="section-inner">
     <div class="reveal">
@@ -1135,7 +1098,6 @@ footer{
   </div>
 </section>
 
-<!-- ===================================================== FOOTER ===================================================== -->
 <footer id="contact">
   <div class="footer-inner">
     <div class="footer-brand">
@@ -1171,7 +1133,7 @@ footer{
   </div>
 </footer>
 
-<!-- ===================================================== SCRIPTS ===================================================== -->
+
 <script>
 /* ── Hero circle animation ─────────────────────────── */
 (function () {
@@ -1357,14 +1319,14 @@ document.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; })
 document.addEventListener('mouseleave', () => { dot.style.opacity='0'; ring.style.opacity='0'; });
 document.addEventListener('mouseenter', () => { dot.style.opacity='1'; ring.style.opacity='1'; });
 
-/* ── Scroll reveal ─────────────────────────────────── */
+
 const revEls = document.querySelectorAll('.reveal');
 const obs = new IntersectionObserver(entries => {
   entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); obs.unobserve(e.target); } });
 }, { threshold: .06 });
 revEls.forEach(el => obs.observe(el));
 
-/* ── Active nav ────────────────────────────────────── */
+
 const navItems = document.querySelectorAll('.nav-item[data-section]');
 const secs     = document.querySelectorAll('section[id], footer[id]');
 window.addEventListener('scroll', () => {
