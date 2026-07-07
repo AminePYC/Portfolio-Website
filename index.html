@@ -5,6 +5,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>Amine Ben Amara — Malware Analyst</title>
 <meta name="description" content="Cybersecurity analyst specialising in malware analysis and threat intelligence."/>
+<link rel="icon" type="image/png" sizes="32x32" href="images/favicon-32x32.png"/>
+<link rel="icon" type="image/png" sizes="16x16" href="images/favicon-16x16.png"/>
+<link rel="shortcut icon" href="images/favicon.ico"/>
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet"/>
@@ -42,25 +45,61 @@ a{color:inherit;text-decoration:none}
 img{display:block;max-width:100%}
 
 
-#cursor{
-  position:fixed;width:9px;height:9px;
-  background:var(--red);border-radius:50%;
+.flame-cursor{
+  position:fixed;top:0;left:0;
+  width:46px;height:60px;
   pointer-events:none;z-index:9999;
-  transform:translate(-50%,-50%);
-  transition:width .15s,height .15s,opacity .2s;
-  box-shadow:0 0 14px var(--red),0 0 4px var(--red);
+  transform:translate(-11%,-5%);
+  transition:width .25s,height .25s,filter .25s,opacity .2s;
+  filter:drop-shadow(0 0 10px rgba(227,7,73,.55)) drop-shadow(0 0 22px rgba(227,7,73,.25));
+  will-change:left,top;
 }
-#cursor-ring{
-  position:fixed;width:34px;height:34px;
-  border:1.5px solid rgba(227,7,73,.45);
-  border-radius:50%;pointer-events:none;z-index:9998;
-  transform:translate(-50%,-50%);
-  transition:width .22s,height .22s;
+.flame-embers{position:fixed;top:0;left:0;width:0;height:0;pointer-events:none;z-index:9998}
+.ember{
+  position:fixed;border-radius:50%;
+  background:radial-gradient(circle,#f8901a 0%,#e91e1e 40%,#e30749 70%,transparent 78%);
+  pointer-events:none;z-index:9998;
+  will-change:transform,opacity;
+  animation:emberFloat .9s ease-out forwards;
 }
-body:has(a:hover) #cursor,
-body:has(button:hover) #cursor{width:5px;height:5px}
-body:has(a:hover) #cursor-ring,
-body:has(button:hover) #cursor-ring{width:50px;height:50px}
+@keyframes emberFloat{
+  0%{opacity:.9;transform:translate(-50%,-50%) scale(1)}
+  100%{opacity:0;transform:translate(calc(-50% + var(--dx)),calc(-50% + var(--dy))) scale(.2)}
+}
+.flame-cursor svg{width:100%;height:100%;display:block}
+
+.flame-layer{transform-box:fill-box;transform-origin:50% 100%}
+.flame-a{animation:flameFlickerA 1.9s ease-in-out infinite}
+.flame-b{animation:flameFlickerB 2.4s ease-in-out infinite .2s}
+.flame-c{animation:flameFlickerC 2.1s ease-in-out infinite .4s}
+
+@keyframes flameFlickerA{
+  0%,100%{transform:scale(1,1) rotate(0deg);opacity:.9}
+  30%{transform:scale(1.08,1.14) rotate(-4deg);opacity:1}
+  60%{transform:scale(.94,1.05) rotate(3deg);opacity:.8}
+}
+@keyframes flameFlickerB{
+  0%,100%{transform:scale(1,1) rotate(0deg);opacity:.85}
+  40%{transform:scale(1.1,1.16) rotate(5deg);opacity:1}
+  70%{transform:scale(.92,.98) rotate(-3deg);opacity:.75}
+}
+@keyframes flameFlickerC{
+  0%,100%{transform:scale(1,1) rotate(0deg);opacity:.9}
+  35%{transform:scale(1.06,1.2) rotate(-3deg);opacity:1}
+  65%{transform:scale(.95,1.02) rotate(4deg);opacity:.8}
+}
+
+.flame-swirl{transform-box:fill-box;transform-origin:center;animation:swirlPulse 2.6s ease-in-out infinite}
+@keyframes swirlPulse{
+  0%,100%{opacity:.85;transform:scale(1)}
+  50%{opacity:1;transform:scale(1.08)}
+}
+
+body:has(a:hover) .flame-cursor,
+body:has(button:hover) .flame-cursor{
+  width:54px;height:68px;
+  filter:drop-shadow(0 0 16px rgba(227,7,73,.8)) drop-shadow(0 0 30px rgba(227,7,73,.4));
+}
 
 #nav {
   position: fixed;
@@ -549,6 +588,96 @@ body:has(button:hover) #cursor-ring{width:50px;height:50px}
 
 
 #skills{background:var(--black)}
+.skills-hud{display:flex;flex-direction:column;align-items:center;gap:2.25rem;margin-top:3.5rem}
+.hud-stage{display:flex;align-items:center;justify-content:center;gap:1rem;width:100%;perspective:1200px}
+
+.hud-nav{
+  display:flex;align-items:center;justify-content:center;
+  width:44px;height:44px;flex-shrink:0;border-radius:50%;
+  border:1px solid rgba(227,7,73,.25);background:rgba(227,7,73,.05);
+  color:var(--red);cursor:none;z-index:6;
+  transition:background .2s,border-color .2s,transform .15s,box-shadow .2s;
+}
+.hud-nav svg{width:18px;height:18px}
+.hud-nav:hover{background:rgba(227,7,73,.14);border-color:rgba(227,7,73,.5);box-shadow:0 0 18px rgba(227,7,73,.25);transform:scale(1.06)}
+.hud-nav:active{transform:scale(.94)}
+
+.hud-track{
+  position:relative;
+  width:min(920px,94vw);
+  height:min(360px,76vw);
+  overflow:hidden;
+  -webkit-mask-image:linear-gradient(to right,transparent 0%,black 14%,black 86%,transparent 100%);
+  mask-image:linear-gradient(to right,transparent 0%,black 14%,black 86%,transparent 100%);
+}
+
+.hud-item{
+  position:absolute;
+  top:50%;left:50%;
+  width:min(320px,68vw);height:min(320px,68vw);
+  transform-style:preserve-3d;
+  transition:transform .55s cubic-bezier(.22,.9,.32,1),opacity .55s ease;
+  pointer-events:none;
+}
+
+.hud-ring-wrap{position:absolute;inset:0;width:100%;height:100%}
+
+.hud-tick{position:absolute;width:0;height:0;border-style:solid;filter:drop-shadow(0 0 4px rgba(227,7,73,.6));z-index:3}
+.tick-n{top:-16px;left:50%;transform:translateX(-50%);border-width:0 6px 9px 6px;border-color:transparent transparent var(--red) transparent;animation:tickPulse 2.4s ease-in-out infinite}
+.tick-s{bottom:-16px;left:50%;transform:translateX(-50%);border-width:9px 6px 0 6px;border-color:var(--red) transparent transparent transparent;animation:tickPulse 2.4s ease-in-out infinite .6s}
+@keyframes tickPulse{0%,100%{opacity:.35}50%{opacity:1}}
+
+.hud-rings{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
+.hud-ring-spin-cw{transform-box:fill-box;transform-origin:center;animation:hudSpin 22s linear infinite}
+.hud-ring-spin-ccw{transform-box:fill-box;transform-origin:center;animation:hudSpin 30s linear infinite reverse}
+.hud-ring-spin-fast{transform-box:fill-box;transform-origin:center;animation:hudSpin 9s linear infinite}
+@keyframes hudSpin{to{transform:rotate(360deg)}}
+
+.hud-core{
+  position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);
+  width:38%;height:38%;border-radius:50%;
+  background:radial-gradient(circle,rgba(227,7,73,.14) 0%,rgba(19,0,9,.92) 70%);
+  border:1px solid rgba(227,7,73,.3);
+  box-shadow:0 0 40px rgba(227,7,73,.18) inset,0 0 30px rgba(227,7,73,.12);
+  display:flex;align-items:center;justify-content:center;z-index:4;
+}
+.hud-core-inner{display:flex;flex-direction:column;align-items:center;gap:.4rem;text-align:center;padding:0 .5rem}
+.hud-cat-icon{width:38px;height:38px;color:var(--red)}
+.hud-cat-icon svg{width:100%;height:100%;stroke:currentColor;fill:none;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round}
+
+.hud-caption{text-align:center;min-height:66px;display:flex;flex-direction:column;align-items:center;gap:.45rem}
+.hud-caption-title{
+  font-family:var(--sans);
+  font-size:clamp(1.4rem,2.8vw,2rem);
+  font-weight:700;
+  letter-spacing:-.02em;
+  color:var(--white);
+  transition:opacity .25s ease,transform .25s ease;
+}
+.hud-caption-sub{
+  font-family:var(--mono);
+  font-size:.7rem;
+  letter-spacing:.16em;
+  text-transform:uppercase;
+  color:var(--red);
+  transition:opacity .25s ease,transform .25s ease;
+}
+.hud-caption.switching .hud-caption-title,
+.hud-caption.switching .hud-caption-sub{opacity:0;transform:translateY(6px)}
+
+.hud-chips{display:flex;flex-wrap:wrap;justify-content:center;gap:.5rem;max-width:640px;min-height:74px;transition:opacity .25s ease,transform .25s ease}
+.hud-chips.switching{opacity:0;transform:translateY(6px)}
+
+.hud-dots{display:flex;gap:.5rem}
+.hud-dot{width:7px;height:7px;border-radius:50%;background:rgba(255,255,255,.15);border:none;padding:0;cursor:none;transition:background .2s,transform .2s,box-shadow .2s}
+.hud-dot.active{background:var(--red);box-shadow:0 0 10px rgba(227,7,73,.7);transform:scale(1.25)}
+
+@media(max-width:640px){
+  .hud-nav{width:38px;height:38px}
+  .hud-track{height:min(280px,68vw)}
+  .hud-item{width:min(250px,64vw);height:min(250px,64vw)}
+  .hud-caption-title{font-size:1.2rem}
+}
 .skills-groups{display:flex;flex-direction:column;gap:2.25rem;margin-top:3.5rem}
 .skill-row{display:flex;align-items:flex-start;gap:1.5rem}
 .skill-row-label{
@@ -778,9 +907,40 @@ footer{
 </head>
 <body>
 
-<div id="cursor"></div>
-<div id="cursor-ring"></div>
+<link rel="icon" href="images/favicon.ico" sizes="any">
+<link rel="icon" type="image/png" sizes="32x32" href="images/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="images/favicon-16x16.png">
 
+<div id="flameCursor" class="flame-cursor">
+  <svg viewBox="0 0 120 150" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <linearGradient id="flameGradBody" x1="10%" y1="0%" x2="90%" y2="100%">
+        <stop offset="0%"  stop-color="#3d000f"/>
+        <stop offset="45%" stop-color="#8c0026"/>
+        <stop offset="75%" stop-color="#e30749"/>
+        <stop offset="100%" stop-color="#ff5f7e"/>
+      </linearGradient>
+      <radialGradient id="flameGradTip" cx="50%" cy="50%" r="50%">
+        <stop offset="0%"  stop-color="#ffb3c1"/>
+        <stop offset="55%" stop-color="#e30749"/>
+        <stop offset="100%" stop-color="#5c0018"/>
+      </radialGradient>
+      <radialGradient id="swirlGlow" cx="50%" cy="50%" r="50%">
+        <stop offset="0%" stop-color="#ff8fa3" stop-opacity=".9"/>
+        <stop offset="100%" stop-color="#5c0018" stop-opacity="0"/>
+      </radialGradient>
+    </defs>
+    <path class="flame-core" d="M14 8 L66 48 L48 54 L76 98 L58 110 L34 68 L20 86 Z"
+          fill="url(#flameGradBody)" stroke="#20000a" stroke-width="2" stroke-linejoin="round"/>
+
+    <g class="flame-swirl">
+      <circle cx="40" cy="42" r="16" fill="url(#swirlGlow)"/>
+      <path d="M40,33 C46,33 50,37 50,42 C50,48 45,52 40,52 C36,52 33,49 33,45 C33,42 35,40 38,40 C40,40 42,41 42,43"
+            fill="none" stroke="#20000a" stroke-width="2.4" stroke-linecap="round"/>
+    </g>
+  </svg>
+</div>
+<div id="flameEmbers" class="flame-embers"></div>
 <nav id="nav">
   <a href="#about" class="nav-item" data-section="about">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
@@ -866,7 +1026,7 @@ footer{
 
     
     <div class="photo-frame">
-      <img src="images/pic_2.png" alt="Amine Ben Amara">
+      <img src="images/pic.png" alt="Amine Ben Amara">
       <div class="placeholder-inner">
         <div class="placeholder-icon">
           <svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
@@ -926,41 +1086,27 @@ footer{
       <h2 class="section-title">What I can do <span class="acc">right now</span></h2>
       <p class="section-body" style="margin-bottom:0">Hands-on tools used in the lab on real samples — not just theory.</p>
     </div>
-    <div class="skills-groups">
-      <div class="skill-row reveal">
-        <div class="skill-row-label">Malware<br>Analysis</div>
-        <div class="skill-chips">
-          <span class="chip hot">Static Analysis</span><span class="chip hot">Dynamic Analysis</span><span class="chip hot">REMnux</span><span class="chip hot">FlareVM</span>
-          <span class="chip">PE analysis</span><span class="chip">strings / FLOSS</span><span class="chip">Any.run</span><span class="chip">MalwareBazaar</span>
-          <span class="chip">YARA rules</span><span class="chip">Wireshark</span><span class="chip">Procmon</span><span class="chip">Ghidra (learning)</span>
-        </div>
-      </div>
-      <div class="skills-divider"></div>
-      <div class="skill-row reveal">
-        <div class="skill-row-label">Blue Team<br>&amp; DFIR</div>
-        <div class="skill-chips">
-          <span class="chip hot">Log analysis</span><span class="chip hot">Windows Event Logs</span><span class="chip hot">MITRE ATT&amp;CK</span>
-          <span class="chip">Splunk</span><span class="chip">Volatility</span><span class="chip">Autopsy</span>
-          <span class="chip">Network forensics</span><span class="chip">IOC extraction</span><span class="chip">Incident triage</span><span class="chip">SIEM basics</span>
-        </div>
-      </div>
-      <div class="skills-divider"></div>
-      <div class="skill-row reveal">
-        <div class="skill-row-label">OSINT &amp;<br>Threat Intel</div>
-        <div class="skill-chips">
-          <span class="chip hot">IOC pivoting</span><span class="chip hot">Infrastructure mapping</span><span class="chip hot">VirusTotal</span>
-          <span class="chip">Shodan</span><span class="chip">Maltego</span><span class="chip">Passive DNS</span>
-          <span class="chip">theHarvester</span><span class="chip">Recon-ng</span><span class="chip">abuse.ch feeds</span><span class="chip">Threat actor profiling</span>
-        </div>
-      </div>
-      <div class="skills-divider"></div>
-      <div class="skill-row reveal">
-        <div class="skill-row-label">Programming<br>&amp; Tooling</div>
-        <div class="skill-chips">
-          <span class="chip hot">Python</span><span class="chip">C++</span><span class="chip">Java</span><span class="chip">JavaScript</span>
-          <span class="chip">Linux CLI</span><span class="chip">Git / GitHub</span><span class="chip">Kali Linux</span><span class="chip">Nmap</span><span class="chip">Metasploit (lab)</span>
-        </div>
-      </div>
+    <div class="skills-hud reveal reveal-d1" id="skillsHud">
+      <div class="hud-stage">
+        <button class="hud-nav hud-prev" id="hudPrev" aria-label="Previous skill category">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+        </button>
+
+        <div class="hud-track" id="hudTrack"></div>
+
+        <button class="hud-nav hud-next" id="hudNext" aria-label="Next skill category">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+    </button>
+  </div>
+
+  <div class="hud-caption" id="hudCaption">
+    <div class="hud-caption-title" id="hudCaptionTitle"></div>
+    <div class="hud-caption-sub" id="hudCaptionSub"></div>
+  </div>
+
+  <div class="hud-chips" id="hudChips"></div>
+      <div class="hud-dots" id="hudDots"></div>
+    </div>
     </div>
   </div>
 </section>
@@ -1023,7 +1169,7 @@ footer{
         <div class="proj-name">Malware Analysis Home Lab</div>
         <p class="proj-desc">Isolated VirtualBox environment with REMnux + FlareVM. Fully configured for static and dynamic analysis — network-isolated so samples can detonate safely.</p>
         <div class="proj-tags"><span class="chip">REMnux</span><span class="chip">FlareVM</span><span class="chip">VirtualBox</span><span class="chip">Any.run</span></div>
-        <a href="https://github.com/yourusername/malware-analysis-lab" class="proj-link">↗ View on GitHub</a>
+        <a href="https://github.com/AminePYC/Malware-Analysis-Lab.git" class="proj-link">↗ View on GitHub</a>
       </div>
       <div class="proj-card reveal reveal-d1">
         <div class="proj-top">
@@ -1033,7 +1179,7 @@ footer{
         <div class="proj-name">OSINT Investigation Framework</div>
         <p class="proj-desc">Personal methodology repo documenting structured investigation workflows — from IOC triage through multi-source pivoting to threat actor profiling.</p>
         <div class="proj-tags"><span class="chip">Maltego</span><span class="chip">Shodan</span><span class="chip">VirusTotal</span><span class="chip">Python</span></div>
-        <a href="https://github.com/yourusername/osint-framework" class="proj-link">↗ View on GitHub</a>
+        <a href="https://github.com/AminePYC/Osint-Investigation.git" class="proj-link">↗ View on GitHub</a>
       </div>
       <div class="proj-card reveal reveal-d2">
         <div class="proj-top">
@@ -1043,7 +1189,7 @@ footer{
         <div class="proj-name">HTB Sherlocks — Writeup Collection</div>
         <p class="proj-desc">Growing collection of blue-team challenge solutions covering log analysis, malware artifact investigation, memory forensics, and incident timeline reconstruction.</p>
         <div class="proj-tags"><span class="chip">Wireshark</span><span class="chip">Volatility</span><span class="chip">Splunk</span><span class="chip">Autopsy</span></div>
-        <a href="https://github.com/yourusername/sherlocks-writeups" class="proj-link">↗ View on GitHub</a>
+        <a href="https://github.com/AminePYC/HTB-Sherlocks-Writeups.git" class="proj-link">↗ View on GitHub</a>
       </div>
     </div>
   </div>
@@ -1293,19 +1439,44 @@ footer{
   window.addEventListener('resize', () => { resize(); initParticles(); initTris(); });
 })();
 
-/* ── Custom cursor ─────────────────────────────────── */
-const dot  = document.getElementById('cursor');
-const ring = document.getElementById('cursor-ring');
-let mx=0, my=0, rx=0, ry=0;
-document.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; });
-(function tick () {
-  dot.style.left  = mx + 'px'; dot.style.top  = my + 'px';
-  rx += (mx - rx) * 0.11;     ry += (my - ry) * 0.11;
-  ring.style.left = rx + 'px'; ring.style.top = ry + 'px';
-  requestAnimationFrame(tick);
+/* ── Flame cursor ───────────────────────────────────── */
+const flameCursor = document.getElementById('flameCursor');
+const emberLayer   = document.getElementById('flameEmbers');
+let fmx = window.innerWidth / 2, fmy = window.innerHeight / 2;
+let fx = fmx, fy = fmy;
+let lastEmberX = fx, lastEmberY = fy;
+
+document.addEventListener('mousemove', e => { fmx = e.clientX; fmy = e.clientY; });
+
+function spawnEmber(x, y) {
+  const ember = document.createElement('span');
+  ember.className = 'ember';
+  const size = Math.random() * 5 + 3;
+  ember.style.width  = size + 'px';
+  ember.style.height = size + 'px';
+  ember.style.left = (x + (Math.random() * 14 - 7)) + 'px';
+  ember.style.top  = (y + (Math.random() * 14 - 7)) + 'px';
+  ember.style.setProperty('--dx', (Math.random() * 30 - 15) + 'px');
+  ember.style.setProperty('--dy', (-Math.random() * 40 - 10) + 'px');
+  emberLayer.appendChild(ember);
+  ember.addEventListener('animationend', () => ember.remove());
+}
+
+(function flameTick () {
+  fx += (fmx - fx) * 0.45;
+  fy += (fmy - fy) * 0.45;
+  flameCursor.style.left = fx + 'px';
+  flameCursor.style.top  = fy + 'px';
+
+  if (Math.hypot(fx - lastEmberX, fy - lastEmberY) > 8) {
+    spawnEmber(fx, fy);
+    lastEmberX = fx; lastEmberY = fy;
+  }
+  requestAnimationFrame(flameTick);
 })();
-document.addEventListener('mouseleave', () => { dot.style.opacity='0'; ring.style.opacity='0'; });
-document.addEventListener('mouseenter', () => { dot.style.opacity='1'; ring.style.opacity='1'; });
+
+document.addEventListener('mouseleave', () => { flameCursor.style.opacity = '0'; });
+document.addEventListener('mouseenter', () => { flameCursor.style.opacity = '1'; });
 
 /* ── Scroll reveal ─────────────────────────────────── */
 const revEls = document.querySelectorAll('.reveal');
@@ -1320,8 +1491,153 @@ const secs     = document.querySelectorAll('section[id], footer[id]');
 window.addEventListener('scroll', () => {
   let cur = '';
   secs.forEach(s => { if (window.scrollY >= s.offsetTop - 140) cur = s.id; });
+  if (window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 2) {
+    cur = 'contact';
+  }
   navItems.forEach(a => a.classList.toggle('active', a.dataset.section === cur));
 }, { passive: true });
+
+/* ── Skills HUD carousel (coverflow) ─────────────── */
+(function () {
+  const svgNS = 'http://www.w3.org/2000/svg';
+  const RED = '#e30749';
+  const hud     = document.getElementById('skillsHud');
+  if (!hud) return;
+  const track   = document.getElementById('hudTrack');
+  const chipsEl = document.getElementById('hudChips');
+  const dotsEl  = document.getElementById('hudDots');
+  const prevBtn = document.getElementById('hudPrev');
+  const nextBtn = document.getElementById('hudNext');
+
+  const CATEGORIES = [
+    { name:'Malware Analysis', icon:'<circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M4.22 4.22l2.12 2.12M17.66 17.66l2.12 2.12M2 12h3M19 12h3M4.22 19.78l2.12-2.12M17.66 6.34l2.12-2.12"/>',
+      chips:['Static Analysis','Dynamic Analysis','REMnux','FlareVM','PE analysis','strings / FLOSS','Any.run','MalwareBazaar','YARA rules','Wireshark','Procmon','Ghidra (learning)'] },
+    { name:'Blue Team & DFIR', icon:'<path d="M12 2l8 4v6c0 5-3.5 8.5-8 10-4.5-1.5-8-5-8-10V6z"/>',
+      chips:['Log analysis','Windows Event Logs','MITRE ATT&CK','Splunk','Volatility','Autopsy','Network forensics','IOC extraction','Incident triage','SIEM basics'] },
+    { name:'OSINT & Threat Intel', icon:'<circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>',
+      chips:['IOC pivoting','Infrastructure mapping','VirusTotal','Shodan','Maltego','Passive DNS','theHarvester','Recon-ng','abuse.ch feeds','Threat actor profiling'] },
+    { name:'Programming & Tooling', icon:'<polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/>',
+      chips:['Python','C++','Java','JavaScript','Linux CLI','Git / GitHub','Kali Linux','Nmap','Metasploit (lab)'] }
+  ];
+
+  let idx = 0, timer = null;
+  const items = [];
+
+  function makeCircle(r, opts) {
+    const c = document.createElementNS(svgNS, 'circle');
+    c.setAttribute('cx', 200); c.setAttribute('cy', 200); c.setAttribute('r', r);
+    c.setAttribute('fill', 'none');
+    c.setAttribute('stroke', RED);
+    c.setAttribute('stroke-width', opts.w || 1);
+    c.setAttribute('stroke-opacity', opts.a || .2);
+    if (opts.dash) c.setAttribute('stroke-dasharray', opts.dash);
+    if (opts.cls) c.setAttribute('class', opts.cls);
+    return c;
+  }
+
+  function buildRings(svg) {
+    svg.appendChild(makeCircle(188, { w:1,  a:.18, dash:'2 6',         cls:'hud-ring-spin-cw'  }));
+    svg.appendChild(makeCircle(158, { w:5,  a:.55, dash:'55 20 30 25', cls:'hud-ring-spin-ccw' }));
+    svg.appendChild(makeCircle(128, { w:1,  a:.28, dash:'5 10',        cls:'hud-ring-spin-fast'}));
+    svg.appendChild(makeCircle(96,  { w:.8, a:.16 }));
+  }
+
+  function buildItems() {
+    track.innerHTML = '';
+    CATEGORIES.forEach((cat) => {
+      const item = document.createElement('div');
+      item.className = 'hud-item';
+      item.innerHTML =
+        '<div class="hud-ring-wrap">' +
+          '<span class="hud-tick tick-n"></span><span class="hud-tick tick-s"></span>' +
+          '<svg class="hud-rings" viewBox="0 0 400 400"></svg>' +
+          '<div class="hud-core"><div class="hud-core-inner">' +
+            '<div class="hud-cat-icon"><svg viewBox="0 0 24 24">' + cat.icon + '</svg></div>' +
+          '</div></div>' +
+        '</div>';
+      track.appendChild(item);
+      items.push(item);
+      buildRings(item.querySelector('.hud-rings'));
+    });
+  }
+
+  function relOffset(i) {
+    const n = CATEGORIES.length;
+    let d = i - idx;
+    if (d > n / 2) d -= n;
+    if (d < -n / 2) d += n;
+    return d;
+  }
+
+  function styleForOffset(off) {
+    const abs = Math.abs(off), dir = Math.sign(off);
+    if (abs === 0) return { x: 0,         scale: 1,   opacity: 1,   z: 5, rot: 0 };
+    if (abs === 1) return { x: dir*210,   scale: .78, opacity: .5,  z: 3, rot: -dir*15 };
+    return               { x: dir*370,   scale: .58, opacity: .12, z: 1, rot: -dir*20 };
+  }
+
+  function layout() {
+    items.forEach((item, i) => {
+      const off = relOffset(i);
+      const s = styleForOffset(off);
+      item.style.transform = `translate(-50%,-50%) translateX(${s.x}px) scale(${s.scale}) rotateY(${s.rot}deg)`;
+      item.style.opacity = s.opacity;
+      item.style.zIndex = s.z;
+      item.classList.toggle('is-active', off === 0);
+    });
+  }
+
+  function renderDots() {
+    dotsEl.innerHTML = '';
+    CATEGORIES.forEach((c, i) => {
+      const b = document.createElement('button');
+      b.className = 'hud-dot' + (i === idx ? ' active' : '');
+      b.setAttribute('aria-label', 'Show ' + c.name);
+      b.addEventListener('click', () => goTo(i));
+      dotsEl.appendChild(b);
+    });
+  }
+
+  const captionEl    = document.getElementById('hudCaption');
+  const captionTitle = document.getElementById('hudCaptionTitle');
+  const captionSub   = document.getElementById('hudCaptionSub');
+
+  function renderCaption() {
+    captionEl.classList.add('switching');
+    setTimeout(() => {
+      captionTitle.textContent = CATEGORIES[idx].name;
+      captionSub.textContent = CATEGORIES[idx].chips.length + ' tools & techniques';
+      captionEl.classList.remove('switching');
+    }, 180);
+  }
+
+  function renderChips() {
+    chipsEl.classList.add('switching');
+    setTimeout(() => {
+      chipsEl.innerHTML = CATEGORIES[idx].chips.map(c => '<span class="chip hot">' + c + '</span>').join('');
+      chipsEl.classList.remove('switching');
+    }, 180);
+  }
+
+  function goTo(next) {
+    idx = ((next % CATEGORIES.length) + CATEGORIES.length) % CATEGORIES.length;
+    layout(); renderCaption(); renderChips(); renderDots();
+  }
+
+  function startAuto() { clearInterval(timer); timer = setInterval(() => goTo(idx + 1), 2200); }
+  function stopAuto()  { clearInterval(timer); }
+
+  prevBtn.addEventListener('click', () => goTo(idx - 1));
+  nextBtn.addEventListener('click', () => goTo(idx + 1));
+  hud.addEventListener('mouseenter', startAuto);
+  hud.addEventListener('mouseleave', stopAuto);
+
+  buildItems();
+  layout();
+  renderCaption();
+  renderChips();
+  renderDots();
+})();
 </script>
 </body>
 </html>
