@@ -6,10 +6,14 @@
   const svgNS  = 'http://www.w3.org/2000/svg';
   const RED    = '#e30749';
 
+  /* sharp on high-DPI screens: canvas backing store is scaled by devicePixelRatio,
+     all drawing code keeps working in CSS pixels */
   function resize () {
     const size = wrap.offsetWidth;
-    canvas.width  = size;
-    canvas.height = size;
+    const dpr  = window.devicePixelRatio || 1;
+    canvas.width  = size * dpr;
+    canvas.height = size * dpr;
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     svgEl.setAttribute('viewBox', `0 0 ${size} ${size}`);
     buildCage();
   }
@@ -107,7 +111,7 @@
   }
 
   function drawParticles () {
-    const W = canvas.width, H = canvas.height;
+    const W = wrap.offsetWidth, H = W;
     for (const p of PARTS) {
       p.x += p.vx; p.y += p.vy;
       if (p.x < 0) p.x = W; if (p.x > W) p.x = 0;
@@ -128,9 +132,11 @@
   }
 
   let ts = 0, spinAngle = 0;
+  let running = true, looping = false;   // pause the animation when the hero is off-screen
+
   function loop () {
     ts++;
-    const W = canvas.width, H = canvas.height, cx = W / 2, cy = H / 2;
+    const W = wrap.offsetWidth, H = W, cx = W / 2, cy = H / 2;
     ctx.clearRect(0, 0, W, H);
 
 
@@ -152,14 +158,25 @@
     if (spinGroup) spinGroup.setAttribute('transform',
       `rotate(${(spinAngle * 180 / Math.PI).toFixed(2)} ${cx} ${cy})`);
 
-    requestAnimationFrame(loop);
+    if (running) requestAnimationFrame(loop);
+    else looping = false;
+  }
+
+  function startLoop () {
+    if (looping) return;
+    looping = true;
+    loop();
   }
 
   function init () {
     resize();
     initParticles();
     initTris();
-    loop();
+    startLoop();
+    new IntersectionObserver(([e]) => {
+      running = e.isIntersecting;
+      if (running) startLoop();
+    }).observe(wrap);
   }
 
   init();
@@ -169,11 +186,24 @@
 /* ── Flame cursor ───────────────────────────────────── */
 const flameCursor = document.getElementById('flameCursor');
 const emberLayer   = document.getElementById('flameEmbers');
+const isTouchDevice = window.matchMedia('(hover: none), (pointer: coarse)').matches;
 let fmx = window.innerWidth / 2, fmy = window.innerHeight / 2;
 let fx = fmx, fy = fmy;
 let lastEmberX = fx, lastEmberY = fy;
+let cursorSeen = false;
 
-document.addEventListener('mousemove', e => { fmx = e.clientX; fmy = e.clientY; });
+/* hidden until the first real mouse move, so it never sits frozen mid-screen */
+flameCursor.style.opacity = '0';
+
+document.addEventListener('mousemove', e => {
+  fmx = e.clientX; fmy = e.clientY;
+  if (!cursorSeen) {                      // snap to the pointer on first move (no slide-in from centre)
+    cursorSeen = true;
+    fx = fmx; fy = fmy;
+    lastEmberX = fx; lastEmberY = fy;
+  }
+  flameCursor.style.opacity = '1';
+});
 
 function spawnEmber(x, y) {
   const ember = document.createElement('span');
@@ -189,7 +219,7 @@ function spawnEmber(x, y) {
   ember.addEventListener('animationend', () => ember.remove());
 }
 
-(function flameTick () {
+function flameTick () {
   fx += (fmx - fx) * 0.45;
   fy += (fmy - fy) * 0.45;
   flameCursor.style.left = fx + 'px';
@@ -200,17 +230,34 @@ function spawnEmber(x, y) {
     lastEmberX = fx; lastEmberY = fy;
   }
   requestAnimationFrame(flameTick);
-})();
+}
+if (!isTouchDevice) flameTick();
 
 document.addEventListener('mouseleave', () => { flameCursor.style.opacity = '0'; });
-document.addEventListener('mouseenter', () => { flameCursor.style.opacity = '1'; });
+document.addEventListener('mouseenter', () => { if (cursorSeen) flameCursor.style.opacity = '1'; });
 
 /* ── Scroll reveal ─────────────────────────────────── */
 const revEls = document.querySelectorAll('.reveal');
 const obs = new IntersectionObserver(entries => {
-  entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); obs.unobserve(e.target); } });
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      e.target.classList.add('in');
+      // after the entrance finishes, switch cards back to snappy hover transitions
+      setTimeout(() => e.target.classList.add('settled'), 1200);
+      obs.unobserve(e.target);
+    }
+  });
 }, { threshold: .06 });
 revEls.forEach(el => obs.observe(el));
+
+/* ── Cursor-following glow on cards ────────────────── */
+document.querySelectorAll('.proj-card, .cert-card').forEach(card => {
+  card.addEventListener('pointermove', e => {
+    const r = card.getBoundingClientRect();
+    card.style.setProperty('--mx', (e.clientX - r.left) + 'px');
+    card.style.setProperty('--my', (e.clientY - r.top)  + 'px');
+  });
+});
 
 /* ── Active nav ────────────────────────────────────── */
 const navItems = document.querySelectorAll('.nav-item[data-section]');

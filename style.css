@@ -7,8 +7,8 @@
   --red2:    #ff1654;
   --red-dim: #7a0028;
   --white:   #FFF0F4;
-  --grey:    #7A6070;
-  --grey2:   #A08090;
+  --grey:    #9A8290;   /* lightened for readable contrast */
+  --grey2:   #B89DAA;   /* lightened for readable contrast */
   --border:  rgba(227,7,73,0.15);
   --glow:    rgba(227,7,73,0.25);
   --mono:    'JetBrains Mono', monospace;
@@ -17,7 +17,7 @@
 
 
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-html{scroll-behavior:smooth;font-size:16px}
+html{scroll-behavior:smooth;font-size:16px;scrollbar-color:var(--red-dim) var(--black);scrollbar-width:thin}
 body{
   background:var(--black);
   color:var(--white);
@@ -28,6 +28,15 @@ body{
 }
 a{color:inherit;text-decoration:none}
 img{display:block;max-width:100%}
+
+::selection{background:rgba(227,7,73,.35);color:#fff}
+::-webkit-scrollbar{width:8px}
+::-webkit-scrollbar-track{background:var(--black)}
+::-webkit-scrollbar-thumb{background:var(--red-dim);border-radius:8px}
+::-webkit-scrollbar-thumb:hover{background:var(--red)}
+
+/* keyboard focus (needed because the native cursor is hidden) */
+a:focus-visible,button:focus-visible{outline:2px solid var(--red);outline-offset:3px;border-radius:6px}
 
 
 .flame-cursor{
@@ -508,7 +517,12 @@ body:has(button:hover) .flame-cursor{
 }
 
 
-.section{padding:110px 6vw;position:relative}
+.section{
+  padding:110px 6vw;position:relative;
+  /* soft glowing divider instead of a hard colour cut */
+  border-top:1px solid transparent;
+  border-image:linear-gradient(90deg,transparent,rgba(227,7,73,.25),transparent) 1;
+}
 .section-inner{max-width:1100px;margin:0 auto}
 
 .eyebrow{
@@ -523,7 +537,13 @@ body:has(button:hover) .flame-cursor{
   font-weight:700;letter-spacing:-.025em;line-height:1.1;
   margin-bottom:.9rem;
 }
-.section-title .acc{color:var(--red)}
+.section-title .acc{
+  color:var(--red);
+  background:linear-gradient(90deg,var(--red),var(--red2),#ff5f7e);
+  -webkit-background-clip:text;background-clip:text;
+  -webkit-text-fill-color:transparent;color:transparent;
+  -webkit-box-decoration-break:clone;box-decoration-break:clone;
+}
 .section-body{
   color:var(--grey);font-size:1rem;
   line-height:1.85;max-width:680px;
@@ -533,10 +553,10 @@ body:has(button:hover) .flame-cursor{
   transition:opacity .65s ease,transform .65s ease;
 }
 .reveal.in{opacity:1;transform:none}
-.reveal-d1{transition-delay:.1s}
-.reveal-d2{transition-delay:.2s}
-.reveal-d3{transition-delay:.3s}
-.reveal-d4{transition-delay:.4s}
+.reveal-d1{transition-delay:.1s;--d:.1s}
+.reveal-d2{transition-delay:.2s;--d:.2s}
+.reveal-d3{transition-delay:.3s;--d:.3s}
+.reveal-d4{transition-delay:.4s;--d:.4s}
 
 
 #about{background:var(--dark)}
@@ -705,6 +725,11 @@ body:has(button:hover) .flame-cursor{
 .cert-entry.now::before{
   border-color:var(--red);background:var(--red);
   box-shadow:0 0 16px rgba(227,7,73,.65);
+  animation:nodePulse 2.4s ease-in-out infinite;
+}
+@keyframes nodePulse{
+  0%,100%{box-shadow:0 0 10px rgba(227,7,73,.5)}
+  50%{box-shadow:0 0 22px rgba(227,7,73,.9)}
 }
 .cert-card{
   background:var(--panel);border:1px solid var(--border);
@@ -712,6 +737,7 @@ body:has(button:hover) .flame-cursor{
   display:grid;grid-template-columns:1fr auto;
   gap:.9rem 2rem;align-items:start;
   transition:border-color .2s,transform .2s;
+  position:relative;overflow:hidden;
 }
 .cert-card:hover{border-color:rgba(227,7,73,.3);transform:translateX(4px)}
 .cert-card.dim{opacity:.55}
@@ -748,6 +774,15 @@ body:has(button:hover) .flame-cursor{
   opacity:0;transition:opacity .25s;
 }
 .proj-card:hover::before{opacity:1}
+
+/* cursor-following glow (position set from script.js) */
+.proj-card::after,.cert-card::after{
+  content:'';position:absolute;inset:0;pointer-events:none;
+  opacity:0;transition:opacity .3s;
+  background:radial-gradient(280px circle at var(--mx,50%) var(--my,50%),rgba(227,7,73,.10),transparent 65%);
+}
+.proj-card:hover::after,.cert-card:hover::after{opacity:1}
+
 .proj-top{display:flex;align-items:flex-start;justify-content:space-between;gap:.7rem}
 .proj-icon-wrap{
   width:36px;height:36px;border-radius:8px;
@@ -789,7 +824,7 @@ body:has(button:hover) .flame-cursor{
 }
 .wu-card:last-child{border-bottom:none}
 .wu-card:hover{background:var(--panel2)}
-.wu-num{font-family:var(--mono);font-size:.65rem;color:var(--red-dim);margin-bottom:.6rem;letter-spacing:.08em}
+.wu-num{font-family:var(--mono);font-size:.65rem;color:#c2154a;margin-bottom:.6rem;letter-spacing:.08em}
 .wu-title{font-size:.97rem;font-weight:600;color:var(--white);margin-bottom:.48rem;line-height:1.4}
 .wu-excerpt{font-size:.84rem;color:var(--grey);line-height:1.7;margin-bottom:.8rem}
 .wu-meta{display:flex;align-items:center;gap:.7rem;flex-wrap:wrap}
@@ -864,10 +899,22 @@ footer{
 .hero-right{animation:fadeInUp .8s .4s both}
 
 
+/* Card entrance fix: these cards define their own `transition`, which used to
+   override the .reveal fade-up and its stagger delays. Merge them back together. */
+.proj-card.reveal,.num-card.reveal,.wu-card.reveal{
+  transition:opacity .65s ease var(--d,0s),transform .65s ease var(--d,0s),
+             border-color .2s,background .2s;
+}
+/* once the entrance is done (class added from script.js), restore snappy hovers */
+.proj-card.reveal.settled,.num-card.reveal.settled,.wu-card.reveal.settled{
+  transition:transform .2s,border-color .2s,background .2s;
+}
+
+
 @media(max-width:960px){
   #hero{grid-template-columns:1fr;padding:100px 5vw 80px;gap:3rem}
   .hero-right{max-width:380px}
-  .photo-frame{width:170px;height:215px}
+  .photo-frame{width:200px;height:200px}   /* was 170x215: an oval with border-radius:50% */
   .about-layout{grid-template-columns:1fr;gap:3rem}
   .project-grid{grid-template-columns:1fr 1fr}
   .skill-row{flex-direction:column;gap:.7rem}
@@ -884,7 +931,20 @@ footer{
   .footer-bottom{flex-direction:column;text-align:center}
   #hero{padding-top:90px}
 }
+@media(max-width:420px){
+  #nav{top:14px;padding:8px;gap:0}
+  .nav-item{padding:0 8px}
+}
+
+/* touch devices: no custom cursor, restore the normal one */
+@media (hover:none), (pointer:coarse){
+  .flame-cursor,.flame-embers{display:none}
+  body,.nav-item,.btn,.hud-nav,.hud-dot,.proj-link,.wu-card,.social-link,.footer-links a{cursor:auto}
+}
+
 @media(prefers-reduced-motion:reduce){
   *,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important}
   .reveal{opacity:1;transform:none}
+  .flame-cursor,.flame-embers,.hero-canvas{display:none}
+  body,.nav-item,.btn,.hud-nav,.hud-dot,.proj-link,.wu-card,.social-link,.footer-links a{cursor:auto}
 }
